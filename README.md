@@ -16,7 +16,8 @@
 2.1, 2.2|	3.5, 3.6, 3.7
 3.0|3.6, 3.7, 3.8
 
-#### 编写你的第一个 Django 应用
+编写你的第一个 Django 应用
+----------
 
 安装
 
@@ -86,3 +87,54 @@ python manage.py startapp polls
 - name 
     -   为你的 URL 取名能使你在 Django 的任意地方唯一地引用它，尤其是在模板中。这个有用的特性允许你只改一个文件就能全局地修改某个 URL 模式。
     
+#### 数据库配置
+
+settings.py
+
+```djangourlpath
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+```
+
+使用 `SQLite` 作为默认数据库。如果想使用其他数据库，你需要安装合适的 [database bindings](https://docs.djangoproject.com/zh-hans/2.1/topics/install/#database-installation) ，然后改变设置文件中 DATABASES 'default' 项目中的一些键值：
+
+- `ENGINE` -- 
+    - 可选值有 `'django.db.backends.sqlite3'`，`'django.db.backends.postgresql'`，`'django.db.backends.mysql'`，或 `'django.db.backends.oracle'`
+- NAME 
+    - 数据库的名称。如果使用的是 `SQLit`，数据库将是你电脑上的一个文件
+
+> 如果你不使用 `SQLite`，则必须添加一些额外设置，比如 `USER` 、 `PASSWORD` 、 `HOST` 等等。想了解更多数据库设置方面的内容，请看文档：[DATABASES](https://docs.djangoproject.com/zh-hans/2.1/ref/settings/#std:setting-DATABASES) 。
+
+> 另外，还要确保该数据库用户中提供 `mysite/settings.py` 具有 `"create database"` 权限
+
+默认开启的某些应用需要至少一个数据表，所以，在使用他们之前需要在数据库中创建一些表。请执行以下命令：
+
+```
+python manage.py migrate
+```
+
+> 这个 migrate 命令检查 INSTALLED_APPS 设置，为其中的每个应用创建需要的数据表，至于具体会创建什么，这取决于你的 mysite/settings.py 设置文件和每个应用的数据库迁移文件（我们稍后会介绍这个）。这个命令所执行的每个迁移操作都会在终端中显示出来。
+
+##### INSTALLED_APPS 
+
+> 关注一下文件头部的 INSTALLED_APPS 设置项。这里包括了会在你项目中启用的所有 Django 应用。应用能在多个项目中使用，你也可以打包并且发布应用，让别人使用它们。
+
+默认包括了以下 Django 的自带应用：
+
+- django.contrib.admin 
+	- 管理员站点
+- django.contrib.auth 
+	- 认证授权系统
+- django.contrib.contenttypes 
+	- 内容类型框架
+- django.contrib.sessions 
+	- 会话框架
+- django.contrib.messages 
+	- 消息框架
+- django.contrib.staticfiles 
+	- 管理静态文件的框架
+	
